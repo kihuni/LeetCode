@@ -1,58 +1,38 @@
-def longestPalindrome(s: str) -> str:
-    # if the string is empty or has length 1, return the string itself
-    if len(s) == 0 or len(s) == 1:
-        return s
-    
-    # This function finds the length of palindrome with center (left, right)
-    def expandFromCenter(left, right):
-        while left >= 0 and right < len(s) and s[left] == s[right]:
-            left -= 1
-            right += 1
-        # Return the palindromic substring
-        return s[left+1:right]
-    
-    longest = ""
-    for i in range(len(s)):
-        # Odd-length palindrome (center is i)
-        palindrome1 = expandFromCenter(i, i)
-        if len(palindrome1) > len(longest):
-            longest = palindrome1
-        
-        # Even-length palindrome (center is i and i+1)
-        palindrome2 = expandFromCenter(i, i+1)
-        if len(palindrome2) > len(longest):
-            longest = palindrome2
-            
-    return longest
-def longestPalindrome(s: str) -> str:
-    # if the string is empty or has length 1, return the string itself
-    if len(s) == 0 or len(s) == 1:
-        return s
-    
-    # This function finds the length of palindrome with center (left, right)
-    def expandFromCenter(left, right):
-        while left >= 0 and right < len(s) and s[left] == s[right]:
-            left -= 1
-            right += 1
-        # Return the palindromic substring
-        return s[left+1:right]
-    
-    longest = ""
-    for i in range(len(s)):
-        # Odd-length palindrome (center is i)
-        palindrome1 = expandFromCenter(i, i)
-        if len(palindrome1) > len(longest):
-            longest = palindrome1
-        
-        # Even-length palindrome (center is i and i+1)
-        palindrome2 = expandFromCenter(i, i+1)
-        if len(palindrome2) > len(longest):
-            longest = palindrome2
-            
-    return longest
+# Given a string s, return the longrdt palindromic substring in s.
 
-s1 = "babad"
-print(longestPalindrome(s1))  # Output: "bab" (or "aba")
+# example 1
+# Input: s = "babad"
+# Output: "bab"
+# Note: "aba" is also a valid answer.
 
-s2 = "cbbd"
-print(longestPalindrome(s2))  # Output: "bb"
+# example 2
+# Input: s = "cbbd"
+# Output: "bb"
+
+# Constraints:
+# 1 <= s.length <= 1000
+# s consist of only digits and English letters (lower-case and/or upper-case)
+
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        if len(s) < 1:
+            return ""
+        start = 0
+        end = 0
+        for i in range(len(s)):
+            len1 = self.expandAroundCenter(s, i, i)
+            len2 = self.expandAroundCenter(s, i, i+1)
+            length = max(len1, len2)
+            if length > end - start:
+                start = i - (length - 1) // 2
+                end = i + length // 2
+        return s[start:end+1]
+    
+    def expandAroundCenter(self, s: str, left: int, right: int) -> int:
+        L = left
+        R = right
+        while L >= 0 and R < len(s) and s[L] == s[R]:
+            L -= 1
+            R += 1
+        return R - L - 1
+    
